@@ -14,7 +14,7 @@ INSERT INTO users (name, username, password_hash, role, status)
 VALUES ('SuperAdmin', 'info@bankad.name', crypt('admin', gen_salt('bf')), 'admin', 'active')
 ON CONFLICT (username) DO NOTHING;
 
--- Table des prospects
+-- Prospects
 CREATE TABLE IF NOT EXISTS prospects (
     id SERIAL PRIMARY KEY,
     agent_id INT REFERENCES users(id),
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS prospects (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des budgets
+-- Budgets
 CREATE TABLE IF NOT EXISTS budgets (
     id SERIAL PRIMARY KEY,
     prospect_id INT REFERENCES prospects(id),
@@ -31,9 +31,22 @@ CREATE TABLE IF NOT EXISTS budgets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table des commissions
+-- Commissions
 CREATE TABLE IF NOT EXISTS commissions (
     id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    commission_rate NUMERIC(5,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Fichiers cryptés
+CREATE TABLE IF NOT EXISTS encrypted_files (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    file_name VARCHAR(255),
+    file_data BYTEA,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
     user_id INT REFERENCES users(id),
     commission_rate NUMERIC(5,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
